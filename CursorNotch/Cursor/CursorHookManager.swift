@@ -3,7 +3,7 @@ import Foundation
 /// Installs an observer-only Cursor user hook.
 /// Cursor's supported path is `~/.cursor/hooks.json` (see cursor.com/docs/hooks).
 /// Existing entries are preserved; only this app's relay command is added or updated.
-struct CursorHookManager: Sendable {
+struct CursorHookManager {
     static let hookFileName = "cursor-notch-hook.py"
     static let marker = "cursor-notch-hook"
 
