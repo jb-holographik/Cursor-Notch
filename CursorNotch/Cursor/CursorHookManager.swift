@@ -40,7 +40,9 @@ struct CursorHookManager {
     }
 
     var scriptURL: URL {
-        supportDirectory.appendingPathComponent(Self.hookFileName)
+        // Cursor runs hook commands through zsh. A space in the path
+        // (`Application Support`) makes zsh split the command and exit 127.
+        homeDirectory.appendingPathComponent(".cursor/\(Self.hookFileName)")
     }
 
     var supportDirectory: URL {
@@ -66,6 +68,10 @@ struct CursorHookManager {
             withIntermediateDirectories: true,
             attributes: [.posixPermissions: 0o700]
         )
+        try fileManager.createDirectory(
+            at: scriptURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
 
         guard let bundled = Bundle.main.url(forResource: "cursor-notch-hook", withExtension: "py") else {
             throw HookError.missingBundledScript
@@ -85,7 +91,7 @@ struct CursorHookManager {
             root["version"] = 1
         }
         var hooks = root["hooks"] as? [String: Any] ?? [:]
-        let command = scriptURL.path
+        let command = "/usr/bin/python3 \(Self.shellQuoted(scriptURL.path))"
 
         for event in Self.observedEvents {
             var entries = hooks[event] as? [[String: Any]] ?? []
@@ -123,6 +129,10 @@ struct CursorHookManager {
 
     private static func isOwned(_ handler: [String: Any]) -> Bool {
         (handler["command"] as? String)?.contains(marker) == true
+    }
+
+    private static func shellQuoted(_ path: String) -> String {
+        "'" + path.replacingOccurrences(of: "'", with: "'\\''") + "'"
     }
 }
 

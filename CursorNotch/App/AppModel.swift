@@ -14,6 +14,7 @@ final class AppModel {
     let stateManager = CursorStateManager()
 
     private let events = HookEventServer()
+    private let cloudAgents = CloudAgentMonitor()
     var isTestingWorking = false
 
     var cursorDetected: Bool { detector.isInstalled }
@@ -37,6 +38,11 @@ final class AppModel {
             self?.handle(event)
         }
         events.start()
+
+        cloudAgents.onEvent = { [weak self] event in
+            self?.handle(event)
+        }
+        cloudAgents.start()
 
         notch.prepare()
         observeWorkspace()
@@ -132,7 +138,7 @@ final class AppModel {
             else { return }
             Task { @MainActor in
                 self?.isTestingWorking = false
-                self?.stateManager.resetToIdle()
+                self?.stateManager.dropLocalSessions()
             }
         }
         NotificationCenter.default.addObserver(

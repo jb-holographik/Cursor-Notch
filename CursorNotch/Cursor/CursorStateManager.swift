@@ -45,6 +45,18 @@ final class CursorStateManager {
         setState(.idle)
     }
 
+    /// Local hooks die with the Cursor process. Cloud agents keep running.
+    func dropLocalSessions() {
+        pendingFinish?.cancel()
+        pendingFinish = nil
+        activeIDs = activeIDs.filter { $0.hasPrefix("cloud:") }
+        if activeIDs.isEmpty {
+            setState(.idle)
+        } else {
+            setState(.working)
+        }
+    }
+
     func forceWorking() {
         pendingFinish?.cancel()
         pendingFinish = nil

@@ -14,6 +14,7 @@
 		AA00000500000000000005 /* CursorHookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000500000000000005 /* CursorHookManager.swift */; };
 		AA00000600000000000006 /* CursorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000600000000000006 /* CursorEvent.swift */; };
 		AA00000700000000000007 /* CursorStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000700000000000007 /* CursorStateManager.swift */; };
+		AA00001600000000000016 /* CloudAgentMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00001600000000000016 /* CloudAgentMonitor.swift */; };
 		AA00000800000000000008 /* NotchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000800000000000008 /* NotchPanel.swift */; };
 		AA00000900000000000009 /* NotchWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000900000000000009 /* NotchWindowManager.swift */; };
 		AA00000A0000000000000A /* NotchNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000A0000000000000A /* NotchNotificationView.swift */; };
@@ -35,6 +36,7 @@
 		AB00000500000000000005 /* CursorHookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorHookManager.swift; sourceTree = "<group>"; };
 		AB00000600000000000006 /* CursorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorEvent.swift; sourceTree = "<group>"; };
 		AB00000700000000000007 /* CursorStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorStateManager.swift; sourceTree = "<group>"; };
+		AB00001600000000000016 /* CloudAgentMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAgentMonitor.swift; sourceTree = "<group>"; };
 		AB00000800000000000008 /* NotchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchPanel.swift; sourceTree = "<group>"; };
 		AB00000900000000000009 /* NotchWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchWindowManager.swift; sourceTree = "<group>"; };
 		AB00000A0000000000000A /* NotchNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchNotificationView.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				AB00000500000000000005 /* CursorHookManager.swift */,
 				AB00000600000000000006 /* CursorEvent.swift */,
 				AB00000700000000000007 /* CursorStateManager.swift */,
+				AB00001600000000000016 /* CloudAgentMonitor.swift */,
 			);
 			path = Cursor;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				AA00000500000000000005 /* CursorHookManager.swift in Sources */,
 				AA00000600000000000006 /* CursorEvent.swift in Sources */,
 				AA00000700000000000007 /* CursorStateManager.swift in Sources */,
+				AA00001600000000000016 /* CloudAgentMonitor.swift in Sources */,
 				AA00000800000000000008 /* NotchPanel.swift in Sources */,
 				AA00000900000000000009 /* NotchWindowManager.swift in Sources */,
 				AA00000A0000000000000A /* NotchNotificationView.swift in Sources */,
@@ -298,7 +302,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CursorNotch/Resources/Info.plist;
@@ -307,7 +311,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.cursornotch.CursorNotch;
 				PRODUCT_NAME = "Cursor Notch";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -324,7 +328,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CursorNotch/Resources/Info.plist;
@@ -333,7 +337,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.cursornotch.CursorNotch;
 				PRODUCT_NAME = "Cursor Notch";
 				SWIFT_EMIT_LOC_STRINGS = YES;

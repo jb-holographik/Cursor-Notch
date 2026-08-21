@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """Cursor user-hook relay. Reads hook JSON on stdin and forwards a small
 event to Cursor Notch over a local Unix socket. Always exits 0 and prints
 `{}` so Cursor is never blocked if the app is not running.

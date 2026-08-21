@@ -45,7 +45,7 @@ Cursor’s supported extension point is user-level **hooks** (`~/.cursor/hooks.j
 On first launch Cursor Notch:
 
 1. Looks for Cursor (`com.todesktop.230313mzl4w4u92`, `com.anysphere.cursor`, or `Cursor.app`).
-2. Copies `cursor-notch-hook.py` to `~/Library/Application Support/CursorNotch/`.
+2. Copies `cursor-notch-hook.py` to `~/.cursor/cursor-notch-hook.py` and registers `/usr/bin/python3` so Cursor’s zsh launcher does not split on spaces.
 3. Merges observer-only entries into `~/.cursor/hooks.json` without removing other hooks.
 
 Hook events:
@@ -59,6 +59,8 @@ Hook events:
 `stop` can fire between model turns. The debounce waits for the next prompt or tool event so an in-progress Agent is not marked finished too early. `loop_limit` is set to `null` so Cursor does not disable the stop hook after five turns.
 
 The hook script reads JSON on stdin, writes one line to a local Unix socket, prints `{}`, and exits 0 even if Cursor Notch is not running.
+
+Cloud Agents run on a remote VM, so they never execute `~/.cursor/hooks.json`. Cursor Notch also reads Cursor’s local Cloud Agent cache and treats `RUNNING` / `CREATING` agents the same way as a local session.
 
 No extra macOS permission is required. Restart Cursor once if a session that was already running does not notify.
 
