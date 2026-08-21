@@ -45,21 +45,28 @@ final class NotchWindowManager {
         hideWork?.cancel()
         hideWork = nil
         appearance = .hidden
-        let completion = hideCompletion
-        hideCompletion = nil
         guard let panel, panel.isVisible else {
-            completion?()
+            finishHide()
             return
         }
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.28
             context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             panel.animator().alphaValue = 0
-        } completionHandler: {
-            panel.orderOut(nil)
-            panel.alphaValue = 1
-            completion?()
         }
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(280))
+            guard self?.appearance == .hidden else { return }
+            self?.finishHide()
+        }
+    }
+
+    private func finishHide() {
+        panel?.orderOut(nil)
+        panel?.alphaValue = 1
+        let completion = hideCompletion
+        hideCompletion = nil
+        completion?()
     }
 
     func relayout() {
