@@ -1,13 +1,18 @@
 # Cursor Notch
 
-A tiny native macOS menu bar utility. When a Cursor Agent is working, it shows Cursor’s own 3×3 animated dots on the MacBook notch. When the Agent finishes, the island morphs into:
+A tiny native macOS menu bar utility that turns the MacBook notch into a Cursor Agent status indicator.
 
-```
-✓ Cursor
-Task finished
-```
+- The left wing shows the official Cursor app icon.
+- The right wing shows Cursor's exact `sine_3x3` animation while an Agent is working.
+- The animation becomes a green checkmark when the task completes.
 
 No network, no account, no telemetry. Agent state stays on the machine.
+
+## Install
+
+Download `Cursor-Notch.zip` from the [latest release](https://github.com/jb-holographik/Cursor-Notch/releases/latest), unzip it, and move `Cursor Notch.app` to Applications.
+
+The release is ad-hoc signed rather than notarized. On first launch, right-click the app and choose **Open** if macOS blocks it.
 
 ## Requirements
 
@@ -59,22 +64,22 @@ No extra macOS permission is required. Restart Cursor once if a session that was
 
 ## Notch placement
 
-The overlay is a non-activating `NSPanel`. It does not modify Apple’s Dynamic Island.
+The overlay is a non-activating `NSPanel`. It does not modify the physical notch.
 
-- If a display reports a hardware notch (`safeAreaInsets.top > 20`), the island is centered on that display, tucked under the notch.
-- If no notched display exists (clamshell, Studio Display, VM), the island is centered on the top edge of the main screen.
+- On a notched display, one pure-black surface spans the physical camera housing and two compact wings. It sits flush with the top edge and uses the screen's reported auxiliary areas to match the real notch width.
+- Without a hardware notch (clamshell, Studio Display, VM), the same status becomes a compact rounded island at the top center of the main screen.
 
 Display sleep, wake, and configuration changes re-layout the panel. The overlay prefers the built-in notched screen when an external monitor is connected.
 
 ## States
 
 1. **Idle** — nothing on the notch.
-2. **Working** — 3×3 circular dots (Cursor’s session-bar dot-matrix). Stays up for the whole task. Disable this in Settings if you only want completion.
-3. **Completed** — checkmark + “Cursor” / “Task finished” for ~3 seconds, then fade out.
+2. **Working** — Cursor icon on the left, animated dots on the right. Stays up for the whole task. Disable this in Settings if you only want completion.
+3. **Completed** — Cursor icon on the left, green checkmark on the right for ~3 seconds, then fade out.
 
 A new task during completion returns immediately to WORKING. Completion waits until every tracked conversation has stopped. Quitting Cursor clears the overlay. Clicking the island activates Cursor.
 
-The working animation is a 3×3 grid of circular dots with a diagonal opacity/scale wave (cycle ≈ 1.05s). That matches Cursor’s documented “dot-matrix” Agent indicator next to the conversation name, not a spinner or progress bar.
+The working indicator reproduces Cursor's bundled `DotGridLoader` with the `sine_3x3` preset: eight discrete frames at 175ms each, for a 1.4-second loop.
 
 ## Menu
 

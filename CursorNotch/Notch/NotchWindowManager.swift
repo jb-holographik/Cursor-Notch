@@ -49,10 +49,12 @@ final class NotchWindowManager {
             finishHide()
             return
         }
+        let collapsedFrame = NotchGeometry.layout().collapsedFrame
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.28
             context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             panel.animator().alphaValue = 0
+            panel.animator().setFrame(collapsedFrame, display: true)
         }
         Task { @MainActor [weak self] in
             try? await Task.sleep(for: .milliseconds(280))
@@ -70,8 +72,10 @@ final class NotchWindowManager {
     }
 
     func relayout() {
-        guard let panel else { return }
-        panel.setFrame(NotchGeometry.panelFrame(for: appearance), display: true)
+        guard let panel, let hosting else { return }
+        let layout = NotchGeometry.layout()
+        hosting.rootView = makeView(appearance: appearance, layout: layout)
+        panel.setFrame(layout.panelFrame, display: true)
         if appearance != .hidden, panel.isVisible {
             panel.orderFrontRegardless()
         }
@@ -80,38 +84,35 @@ final class NotchWindowManager {
     private func present(animatedFromHidden: Bool) {
         prepare()
         guard let panel, let hosting else { return }
-        hosting.rootView = NotchNotificationView(
-            appearance: appearance,
-            onActivateCursor: {
-                AppModel.shared.activateCursor()
-            }
-        )
-        let frame = NotchGeometry.panelFrame(for: appearance)
+        let layout = NotchGeometry.layout()
+        hosting.rootView = makeView(appearance: appearance, layout: layout)
         if animatedFromHidden {
             panel.alphaValue = 0
-            panel.setFrame(frame, display: true)
+            panel.setFrame(layout.collapsedFrame, display: true)
             panel.orderFrontRegardless()
             NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.32
                 context.timingFunction = CAMediaTimingFunction(name: .easeOut)
                 panel.animator().alphaValue = 1
+                panel.animator().setFrame(layout.panelFrame, display: true)
             }
         } else {
             NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.28
                 context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                panel.animator().setFrame(frame, display: true)
+                panel.animator().setFrame(layout.panelFrame, display: true)
             }
             panel.orderFrontRegardless()
         }
     }
 
     private func makePanel() {
-        let view = NotchNotificationView(appearance: .hidden, onActivateCursor: {})
+        let layout = NotchGeometry.layout()
+        let view = makeView(appearance: .hidden, layout: layout)
         let hostingView = NSHostingView(rootView: view)
-        hostingView.frame = NSRect(origin: .zero, size: NotchGeometry.finishedSize)
+        hostingView.frame = NSRect(origin: .zero, size: layout.panelFrame.size)
         let panel = NotchPanel(
-            contentRect: NSRect(origin: .zero, size: NotchGeometry.finishedSize),
+            contentRect: NSRect(origin: .zero, size: layout.panelFrame.size),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -120,29 +121,77 @@ final class NotchWindowManager {
         self.panel = panel
         self.hosting = hostingView
     }
+
+    private func makeView(
+        appearance: NotchAppearance,
+        layout: NotchGeometry.Layout
+    ) -> NotchNotificationView {
+        NotchNotificationView(
+            appearance: appearance,
+            layout: layout,
+            onActivateCursor: {
+                AppModel.shared.activateCursor()
+            }
+        )
+    }
 }
 
 enum NotchGeometry {
-    static let workingSize = NSSize(width: 86, height: 34)
-    static let finishedSize = NSSize(width: 176, height: 54)
+    struct Layout: Equatable {
+        let panelFrame: NSRect
+        let notchWidth: CGFloat
+        let wingWidth: CGFloat
+        let isNotched: Bool
 
-    static func panelFrame(for appearance: NotchAppearance) -> NSRect {
-        let size: NSSize = appearance == .finished ? finishedSize : workingSize
+        var collapsedFrame: NSRect {
+            NSRect(
+                x: panelFrame.midX - notchWidth / 2,
+                y: panelFrame.minY,
+                width: notchWidth,
+                height: panelFrame.height
+            )
+        }
+    }
+
+    private static let wingWidth: CGFloat = 52
+    private static let fallbackNotchWidth: CGFloat = 44
+    private static let fallbackHeight: CGFloat = 34
+
+    static func layout() -> Layout {
         let screen = preferredScreen()
         let frame = screen.frame
         let notchHeight = screen.safeAreaInsets.top
-        let y: CGFloat
-        if notchHeight > 20 {
-            y = frame.maxY - notchHeight - 1
-        } else {
-            y = frame.maxY - size.height + 2
+        if notchHeight > 20,
+           let leftArea = screen.auxiliaryTopLeftArea,
+           let rightArea = screen.auxiliaryTopRightArea,
+           leftArea.maxX < rightArea.minX
+        {
+            let notchWidth = rightArea.minX - leftArea.maxX
+            let panelFrame = NSRect(
+                x: leftArea.maxX - wingWidth,
+                y: frame.maxY - notchHeight,
+                width: notchWidth + wingWidth * 2,
+                height: notchHeight
+            )
+            return Layout(
+                panelFrame: panelFrame,
+                notchWidth: notchWidth,
+                wingWidth: wingWidth,
+                isNotched: true
+            )
         }
-        let extraDrop: CGFloat = appearance == .finished ? 4 : 0
-        return NSRect(
-            x: frame.midX - size.width / 2,
-            y: y - extraDrop,
-            width: size.width,
-            height: size.height
+
+        let width = fallbackNotchWidth + wingWidth * 2
+        return Layout(
+            panelFrame: NSRect(
+                x: frame.midX - width / 2,
+                y: frame.maxY - fallbackHeight,
+                width: width,
+                height: fallbackHeight
+            ),
+            notchWidth: fallbackNotchWidth,
+            wingWidth: wingWidth,
+            isNotched: false
         )
     }
 

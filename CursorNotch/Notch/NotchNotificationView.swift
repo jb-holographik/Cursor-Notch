@@ -1,65 +1,92 @@
+import AppKit
 import SwiftUI
 
 struct NotchNotificationView: View {
     let appearance: NotchAppearance
+    let layout: NotchGeometry.Layout
     let onActivateCursor: () -> Void
 
     var body: some View {
         Button(action: onActivateCursor) {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            HStack(spacing: 0) {
+                cursorIcon
+                    .frame(width: layout.wingWidth)
+
+                Color.clear
+                    .frame(width: layout.notchWidth)
+
+                status
+                    .frame(width: layout.wingWidth)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(notchBlack)
+            .clipShape(attachedShape)
+            .contentShape(attachedShape)
         }
         .buttonStyle(.plain)
-        .background(islandBackground)
-        .clipShape(Capsule())
-        .overlay {
-            Capsule()
-                .strokeBorder(Color.white.opacity(0.08), lineWidth: 1)
-        }
+        .accessibilityLabel(accessibilityLabel)
         .animation(.easeInOut(duration: 0.28), value: appearance)
     }
 
     @ViewBuilder
-    private var content: some View {
+    private var cursorIcon: some View {
+        if appearance == .hidden {
+            Color.clear
+        } else if let applicationURL = CursorDetector().applicationURL {
+            Image(nsImage: NSWorkspace.shared.icon(forFile: applicationURL.path))
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 26, height: 26)
+                .clipShape(RoundedRectangle(cornerRadius: 6.5, style: .continuous))
+                .transition(.opacity.combined(with: .scale(scale: 0.8)))
+        } else {
+            Image(systemName: "cursorarrow")
+                .font(.system(size: 15, weight: .medium))
+                .foregroundStyle(.white)
+        }
+    }
+
+    @ViewBuilder
+    private var status: some View {
         switch appearance {
         case .hidden:
             Color.clear
         case .working:
-            CursorDotsAnimation()
+            CursorDotsAnimation(color: .white)
                 .transition(.opacity.combined(with: .scale(scale: 0.88)))
         case .finished:
-            HStack(spacing: 10) {
-                Image(systemName: "checkmark")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.white)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Cursor")
-                        .font(.system(size: 12, weight: .semibold))
-                    Text("Task finished")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.72))
-                }
-            }
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .transition(.opacity.combined(with: .scale(scale: 0.96)))
+            Image(systemName: "checkmark")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(Color(red: 0.19, green: 0.82, blue: 0.35))
+                .transition(.opacity.combined(with: .scale(scale: 0.72)))
         }
     }
 
-    private var islandBackground: some View {
-        VisualEffectPill()
-            .overlay(Color.black.opacity(0.45))
-    }
-}
-
-private struct VisualEffectPill: NSViewRepresentable {
-    func makeNSView(context: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material = .hudWindow
-        view.blendingMode = .behindWindow
-        view.state = .active
-        return view
+    private var attachedShape: UnevenRoundedRectangle {
+        let topRadius: CGFloat = layout.isNotched ? 0 : 13
+        return UnevenRoundedRectangle(
+            cornerRadii: .init(
+                topLeading: topRadius,
+                bottomLeading: 13,
+                bottomTrailing: 13,
+                topTrailing: topRadius
+            ),
+            style: .continuous
+        )
     }
 
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
+    private var notchBlack: Color {
+        Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 1)
+    }
+
+    private var accessibilityLabel: String {
+        switch appearance {
+        case .hidden:
+            "Cursor"
+        case .working:
+            "Cursor agent working"
+        case .finished:
+            "Cursor task completed"
+        }
+    }
 }
