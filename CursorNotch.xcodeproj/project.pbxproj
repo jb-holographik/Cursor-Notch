@@ -17,6 +17,7 @@
 		AA00000800000000000008 /* NotchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000800000000000008 /* NotchPanel.swift */; };
 		AA00000900000000000009 /* NotchWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000900000000000009 /* NotchWindowManager.swift */; };
 		AA00000A0000000000000A /* NotchNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000A0000000000000A /* NotchNotificationView.swift */; };
+		AA00001500000000000015 /* NotchShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00001500000000000015 /* NotchShape.swift */; };
 		AA00000B0000000000000B /* CursorDotsAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000B0000000000000B /* CursorDotsAnimation.swift */; };
 		AA00000C0000000000000C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000C0000000000000C /* SettingsView.swift */; };
 		AA00000D0000000000000D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000D0000000000000D /* AppSettings.swift */; };
@@ -37,6 +38,7 @@
 		AB00000800000000000008 /* NotchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchPanel.swift; sourceTree = "<group>"; };
 		AB00000900000000000009 /* NotchWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchWindowManager.swift; sourceTree = "<group>"; };
 		AB00000A0000000000000A /* NotchNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchNotificationView.swift; sourceTree = "<group>"; };
+		AB00001500000000000015 /* NotchShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchShape.swift; sourceTree = "<group>"; };
 		AB00000B0000000000000B /* CursorDotsAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorDotsAnimation.swift; sourceTree = "<group>"; };
 		AB00000C0000000000000C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AB00000D0000000000000D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				AB00000800000000000008 /* NotchPanel.swift */,
 				AB00000900000000000009 /* NotchWindowManager.swift */,
 				AB00000A0000000000000A /* NotchNotificationView.swift */,
+				AB00001500000000000015 /* NotchShape.swift */,
 				AB00000B0000000000000B /* CursorDotsAnimation.swift */,
 			);
 			path = Notch;
@@ -239,6 +242,7 @@
 				AA00000800000000000008 /* NotchPanel.swift in Sources */,
 				AA00000900000000000009 /* NotchWindowManager.swift in Sources */,
 				AA00000A0000000000000A /* NotchNotificationView.swift in Sources */,
+				AA00001500000000000015 /* NotchShape.swift in Sources */,
 				AA00000B0000000000000B /* CursorDotsAnimation.swift in Sources */,
 				AA00000C0000000000000C /* SettingsView.swift in Sources */,
 				AA00000D0000000000000D /* AppSettings.swift in Sources */,

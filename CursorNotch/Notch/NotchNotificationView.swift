@@ -9,6 +9,9 @@ struct NotchNotificationView: View {
     var body: some View {
         Button(action: onActivateCursor) {
             HStack(spacing: 0) {
+                Color.clear
+                    .frame(width: layout.topCornerRadius)
+
                 cursorIcon
                     .frame(width: layout.wingWidth)
 
@@ -17,6 +20,9 @@ struct NotchNotificationView: View {
 
                 status
                     .frame(width: layout.wingWidth)
+
+                Color.clear
+                    .frame(width: layout.topCornerRadius)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(notchBlack)
@@ -62,17 +68,27 @@ struct NotchNotificationView: View {
         }
     }
 
-    private var attachedShape: UnevenRoundedRectangle {
-        let topRadius: CGFloat = layout.isNotched ? 0 : 13
-        return UnevenRoundedRectangle(
-            cornerRadii: .init(
-                topLeading: topRadius,
-                bottomLeading: 13,
-                bottomTrailing: 13,
-                topTrailing: topRadius
-            ),
-            style: .continuous
-        )
+    private var attachedShape: AnyShape {
+        if layout.isNotched {
+            AnyShape(
+                NotchShape(
+                    topCornerRadius: layout.topCornerRadius,
+                    bottomCornerRadius: layout.bottomCornerRadius
+                )
+            )
+        } else {
+            AnyShape(
+                UnevenRoundedRectangle(
+                    cornerRadii: .init(
+                        topLeading: layout.bottomCornerRadius,
+                        bottomLeading: layout.bottomCornerRadius,
+                        bottomTrailing: layout.bottomCornerRadius,
+                        topTrailing: layout.bottomCornerRadius
+                    ),
+                    style: .continuous
+                )
+            )
+        }
     }
 
     private var notchBlack: Color {

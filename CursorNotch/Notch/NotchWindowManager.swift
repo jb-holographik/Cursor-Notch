@@ -141,13 +141,16 @@ enum NotchGeometry {
         let panelFrame: NSRect
         let notchWidth: CGFloat
         let wingWidth: CGFloat
+        let topCornerRadius: CGFloat
+        let bottomCornerRadius: CGFloat
         let isNotched: Bool
 
         var collapsedFrame: NSRect {
-            NSRect(
-                x: panelFrame.midX - notchWidth / 2,
+            let width = notchWidth + topCornerRadius * 2
+            return NSRect(
+                x: panelFrame.midX - width / 2,
                 y: panelFrame.minY,
-                width: notchWidth,
+                width: width,
                 height: panelFrame.height
             )
         }
@@ -156,6 +159,8 @@ enum NotchGeometry {
     private static let wingWidth: CGFloat = 52
     private static let fallbackNotchWidth: CGFloat = 44
     private static let fallbackHeight: CGFloat = 34
+    private static let attachedTopCornerRadius: CGFloat = 6
+    private static let bottomCornerRadius: CGFloat = 13
 
     static func layout() -> Layout {
         let screen = preferredScreen()
@@ -168,15 +173,17 @@ enum NotchGeometry {
         {
             let notchWidth = rightArea.minX - leftArea.maxX
             let panelFrame = NSRect(
-                x: leftArea.maxX - wingWidth,
+                x: leftArea.maxX - wingWidth - attachedTopCornerRadius,
                 y: frame.maxY - notchHeight,
-                width: notchWidth + wingWidth * 2,
+                width: notchWidth + wingWidth * 2 + attachedTopCornerRadius * 2,
                 height: notchHeight
             )
             return Layout(
                 panelFrame: panelFrame,
                 notchWidth: notchWidth,
                 wingWidth: wingWidth,
+                topCornerRadius: attachedTopCornerRadius,
+                bottomCornerRadius: bottomCornerRadius,
                 isNotched: true
             )
         }
@@ -191,6 +198,8 @@ enum NotchGeometry {
             ),
             notchWidth: fallbackNotchWidth,
             wingWidth: wingWidth,
+            topCornerRadius: 0,
+            bottomCornerRadius: bottomCornerRadius,
             isNotched: false
         )
     }
